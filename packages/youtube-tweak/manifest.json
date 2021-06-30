@@ -1,0 +1,24 @@
+{
+    "manifest_version": 2,
+    "name": "My YouTube tweak",
+    "version": "1.0",
+    "description": "Remove an HTML element on YouTube I don't want",
+    "icons": {
+        "48": "icons/border-48.png"
+    },
+    "content_scripts": [
+        {
+            "matches": [
+                "*://*.youtube.com/watch"
+            ],
+            "js": [
+                "hide-sidebar.js"
+            ]
+        }
+    ],
+    "browser_specific_settings": {
+        "gecko": {
+            "id": "youtube-tweak@polv.cc"
+        }
+    }
+}
