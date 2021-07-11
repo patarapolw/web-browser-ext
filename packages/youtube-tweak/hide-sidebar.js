@@ -50,5 +50,9 @@ window.addEventListener("keypress", (ev) => {
         return;
     }
 
+    if (target.hasAttribute("contenteditable")) {
+        return;
+    }
+
     SEL.doToggle();
 });
