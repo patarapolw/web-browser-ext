@@ -3,13 +3,10 @@
     "name": "My YouTube tweak",
     "version": "1.0",
     "description": "Remove an HTML element on YouTube I don't want",
-    "icons": {
-        "48": "icons/border-48.png"
-    },
     "content_scripts": [
         {
             "matches": [
-                "*://*.youtube.com/watch"
+                "*://*.youtube.com/watch*"
             ],
             "js": [
                 "hide-sidebar.js"
