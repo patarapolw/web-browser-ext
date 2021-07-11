@@ -1,9 +1,11 @@
+const SEL = "#secondary";
+
 /**
  *
  * @param {HTMLElement} selector
  * @param {HTMLElement} [node]
  */
-function hideElement(selector, node) {
+function doAction(selector, node) {
     const el = /** @type {HTMLDivElement} */ (
         (node || document.body).querySelector(selector)
     );
@@ -12,13 +14,14 @@ function hideElement(selector, node) {
     }
 }
 
-function watchForSidebar() {
+function watch() {
     const observer = new MutationObserver((mutations) => {
         mutations.forEach((mutation) => {
             if (!mutation.addedNodes) return;
 
             for (let i = 0; i < mutation.addedNodes.length; i++) {
-                hideElement("#secondary");
+                doAction(SEL);
+                // obs.disconnect();
             }
         });
     });
@@ -33,10 +36,10 @@ function watchForSidebar() {
     return observer;
 }
 
-hideElement("#secondary");
+doAction(SEL);
 
 window.addEventListener("DOMContentLoaded", () => {
-    const obs = watchForSidebar();
+    const obs = watch();
 
     setTimeout(() => {
         obs.disconnect();
