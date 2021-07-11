@@ -1,47 +1,54 @@
-const SEL = "#secondary";
-
 /**
  *
  * @param {HTMLElement} selector
- * @param {HTMLElement} [node]
+ * @param {object} opts
+ * @param {HTMLElement} [opts.node]
+ * @param {(el: HTMLElement) => void} opts.action
  */
-function doAction(selector, node) {
+function doAction(selector, opts) {
     const el = /** @type {HTMLDivElement} */ (
-        (node || document.body).querySelector(selector)
+        (opts.node || document.body).querySelector(selector)
     );
     if (el) {
-        el.style.display = "none";
+        opts.action(el);
     }
 }
 
-function watch() {
-    const observer = new MutationObserver((mutations) => {
-        mutations.forEach((mutation) => {
-            if (!mutation.addedNodes) return;
-
-            for (let i = 0; i < mutation.addedNodes.length; i++) {
-                doAction(SEL);
-                // obs.disconnect();
-            }
+const SEL = {
+    selector: "#secondary",
+    display: "block",
+    doHide() {
+        return doAction(this.selector, {
+            action: (el) => {
+                if (el.style.display !== "none") {
+                    this.display = el.style.display;
+                    el.style.display = "none";
+                }
+            },
         });
-    });
+    },
+    doToggle() {
+        return doAction(this.selector, {
+            action: (el) =>
+                el.style.display === "none"
+                    ? (el.style.display = this.display)
+                    : (el.style.display = "none"),
+        });
+    },
+};
 
-    observer.observe(document.body, {
-        childList: true,
-        subtree: true,
-        attributes: false,
-        characterData: false,
-    });
+SEL.doHide();
 
-    return observer;
-}
+window.addEventListener("keypress", (ev) => {
+    if (ev.key !== "s") {
+        return;
+    }
 
-doAction(SEL);
+    const target = /** @type {HTMLElement} */ (ev.target);
 
-window.addEventListener("DOMContentLoaded", () => {
-    const obs = watch();
+    if (["INPUT", "TEXTAREA"].includes(target.tagName.toLocaleUpperCase())) {
+        return;
+    }
 
-    setTimeout(() => {
-        obs.disconnect();
-    }, 1000);
+    SEL.doToggle();
 });
